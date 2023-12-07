@@ -32,7 +32,6 @@ def check_notes_and_notify():
             user_id, notes_name, notes_text, _ = note
             bot.send_message(user_id, f"Напоминание: {notes_name}\n{notes_text}")
 
-            # Удаление заметки из базы данных
             cursor.execute("DELETE FROM notes WHERE user_id = ? AND notes_name = ?", (user_id, notes_name))
             conn.commit()
 
@@ -156,6 +155,7 @@ def reply(message):
 
 @bot.message_handler(commands=['delete'])
 def delete(message):
+    user_id = message.from_user.id
     conn = sqlite3.connect('notes.sql')
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM notes WHERE user_id = ?", (user_id,))
@@ -194,6 +194,7 @@ def delete_note(message):
         conn.close()
 @bot.message_handler(commands=['edit'])
 def startEdit(message):
+    user_id = message.from_user.id
     conn = sqlite3.connect('notes.sql')
     cursor = conn.cursor()
     cursor.execute("SELECT COUNT(*) FROM notes WHERE user_id = ?", (user_id,))
